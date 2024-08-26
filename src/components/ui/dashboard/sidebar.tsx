@@ -1,8 +1,9 @@
 import { cn } from '@/lib/utils';
 import { cva, VariantProps } from 'class-variance-authority';
-import { Cat, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import React from 'react';
 import Collapsible from './sidebar/collapsible';
+import Options from './sidebar/options';
 
 const sidebarVariants = cva(
 	'bg-white border h-screen top-0 left-0 z-50 flex flex-col gap-10 p-8',
@@ -35,7 +36,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 			ref={ref}
 			{...props}	
 		>
-			<div className='flex gap-2 items-center'>
+			<div className={cn('flex gap-2 items-center', size === 'sm' && 'hidden')}>
 				<Lock size={36} className='text-primary border-primary' />
 				{!asChild && (
 					<div className='flex gap-1 flex-1 items-end'>
@@ -45,7 +46,16 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 				)}
 			</div>
 			<div className='mt-5'>
-				<Collapsible />
+				{
+					size === 'sm' && (
+						<Options />
+					)
+				}
+				{
+					size === 'default' && (
+						<Collapsible />
+					)
+				}
 			</div>
 		</div>
 	);

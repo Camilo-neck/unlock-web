@@ -32,7 +32,7 @@ export default function Collapsible() {
         <CollapsibleContent>
           <div className="mt-2 space-y-2 pl-4">
             {childEvents.map((event) => (
-              <div key={event.name} className={`flex items-center text-gray-700 justify-between rounded-md px-4 py-2 text-left text-sm font-medium hover:bg-gray-100 ${event.selected && '!bg-primary !text-white hover:!bg-primary'}`}>
+              <div onClick={() => console.log(event.name)} key={event.name} className={`flex items-center text-gray-700 justify-between rounded-md px-4 py-2 text-left text-sm font-medium hover:bg-gray-100 ${event.selected && '!bg-primary !text-white hover:!bg-primary'}`}>
                 <div className="flex items-center space-x-3">
                   <span className="text-xl">{event.icon}</span>
                   <span>{event.name}</span>
