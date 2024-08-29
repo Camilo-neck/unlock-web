@@ -40,7 +40,8 @@ export default function Home() {
           priority
         />
       </div>
-        <Button size="sm"><Link href="/dashboard">DASHBOARD</Link></Button>
+        <Button size="sm"><Link href="/login">LOGIN</Link></Button>
+        <Button size="sm"><Link href="/register">REGISTER</Link></Button>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
         <a
