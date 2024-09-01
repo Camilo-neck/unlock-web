@@ -2,6 +2,10 @@ import { type ClassValue, clsx } from "clsx"
 import { redirect } from "next/navigation";
 import { twMerge } from "tailwind-merge"
 
+export function formatDateString(date: string) {
+  return new Date(date).toLocaleString()
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

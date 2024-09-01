@@ -19,7 +19,12 @@ export default function useSession() {
 			session: null;
 		};
 		error: null;
-	}>();
+	}>({
+		data: {
+			session: null
+		},
+		error: null
+	});
 
 	useEffect(()=>{
 		async function f() {

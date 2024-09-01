@@ -37,7 +37,7 @@ const RegisterPage = ({ searchParams }: { searchParams: Message }) => {
 			options: {
 				data: {
 					full_name: name,
-					phoneNumber: phoneNumber,
+					phone: phoneNumber,
 				},
 			},
 		});

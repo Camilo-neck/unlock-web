@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { cva, VariantProps } from 'class-variance-authority';
 import { Lock, LogOut } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Collapsible from './sidebar/collapsible';
 import Options from './sidebar/options';
 import { createClient } from '@/lib/supabase/client';
@@ -9,6 +9,9 @@ import useUser from '@/hooks/useUser';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../dropdown-menu';
 import { Button } from '../button';
 import { useRouter } from 'next/navigation';
+import  { useQuery } from 'react-query';
+import useSession from '@/hooks/useSession';
+import getAdminEvents from '@/services/getAdminEvents';
 
 const sidebarVariants = cva(
 	'bg-white border h-screen top-0 left-0 z-50 flex flex-col gap-10 p-8',
@@ -37,7 +40,18 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 	({className, variant, size, asChild = false, ...props}, ref) => {
 	const supabase = createClient();
 	const router = useRouter();
-	const { data } = useUser();
+	const { data: userData } = useUser();
+	const { data: sessionData } = useSession();
+
+	const { data: userEvents } = useQuery({
+		queryKey: 'userEvents',
+		queryFn: () => getAdminEvents(sessionData.session?.access_token ?? ''),
+		enabled: !!sessionData.session?.access_token
+	});
+
+	useEffect(() => {
+		console.log(userEvents);
+	}, [userEvents]);
 	
 	const signOut = async () => {
 		await supabase.auth.signOut();
@@ -61,31 +75,35 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 			<div className='mt-5 flex-1'>
 				{
 					size === 'sm' && (
-						<Options />
+						<Options events={userEvents} />
 					)
 				}
 				{
 					size === 'default' && (
-						<Collapsible />
+						<Collapsible events={userEvents} />
 					)
 				}
 			</div>
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<div className='flex flex-col gap-1 text-wrap break-all'>
-						<p className='text-sm font-semibold'>{data?.user?.email}</p>
-						<p className='text-xs'>{data?.user?.role}</p>
-					</div>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					<DropdownMenuItem>
-						<Button onClick={signOut} variant='ghost'>
-							<LogOut className='mr-1' size={16} />
-							Log Out
-						</Button>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+			{
+				size === 'default' && (
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<div className='flex flex-col gap-1 text-wrap break-all'>
+								<p className='text-sm font-semibold'>{userData?.user?.user_metadata.full_name ?? 'Unnamed'}</p>
+								<p className='text-xs'>{userData?.user?.email}</p>
+							</div>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem>
+								<Button onClick={signOut} variant='ghost'>
+									<LogOut className='mr-1' size={16} />
+									Log Out
+								</Button>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				)
+			}
 		</div>
 	);
 }
