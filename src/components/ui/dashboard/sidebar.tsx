@@ -11,7 +11,8 @@ import { Button } from '../button';
 import { useRouter } from 'next/navigation';
 import  { useQuery } from 'react-query';
 import useSession from '@/hooks/useSession';
-import getAdminEvents from '@/services/getAdminEvents';
+import getAdminEvents from '@/services/getAdminEvents.service';
+import { Event } from '@/schemas/event.schema';
 
 const sidebarVariants = cva(
 	'bg-white border h-screen top-0 left-0 z-50 flex flex-col gap-10 p-8',
@@ -34,24 +35,18 @@ const sidebarVariants = cva(
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof sidebarVariants> {
 	asChild?: boolean;
+	events?: Event[];
 }
 
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
-	({className, variant, size, asChild = false, ...props}, ref) => {
+	({className, variant, size, events, asChild = false, ...props}, ref) => {
 	const supabase = createClient();
 	const router = useRouter();
 	const { data: userData } = useUser();
-	const { data: sessionData } = useSession();
-
-	const { data: userEvents } = useQuery({
-		queryKey: 'userEvents',
-		queryFn: () => getAdminEvents(sessionData.session?.access_token ?? ''),
-		enabled: !!sessionData.session?.access_token
-	});
 
 	useEffect(() => {
-		console.log(userEvents);
-	}, [userEvents]);
+		console.log(events);
+	}, [events]);
 	
 	const signOut = async () => {
 		await supabase.auth.signOut();
@@ -75,12 +70,12 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 			<div className='mt-5 flex-1'>
 				{
 					size === 'sm' && (
-						<Options events={userEvents} />
+						<Options events={events} />
 					)
 				}
 				{
 					size === 'default' && (
-						<Collapsible events={userEvents} />
+						<Collapsible events={events} />
 					)
 				}
 			</div>

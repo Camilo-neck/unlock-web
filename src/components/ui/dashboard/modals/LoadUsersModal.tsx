@@ -6,9 +6,18 @@ import { Input } from '../../input';
 import { Label } from '../../label';
 
 import * as XLSX from 'xlsx';
+import { useMutation } from 'react-query';
+import createMassiveBookings from '@/services/createMassiveBookings.service';
+import { CreateUser, CreateUserSchema } from '@/schemas/user.schema';
 
-const LoadUsersModal = () => {
-	const [ loadedUsers, setLoadedUsers ] = useState<any[]>([]);
+interface LoadUsersModalProps {
+	eventId: string;
+}
+
+const LoadUsersModal = ({
+	eventId,
+}: LoadUsersModalProps) => {
+	const [ loadedUsers, setLoadedUsers ] = useState<CreateUser>([]);
 
 	const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -20,10 +29,24 @@ const LoadUsersModal = () => {
 			const workbook = XLSX.read(data, { type: 'binary' });
 			const sheetName = workbook.SheetNames[0];
 			const sheet = workbook.Sheets[sheetName];
-			const json = XLSX.utils.sheet_to_json(sheet);
+			const json: CreateUser = XLSX.utils.sheet_to_json(sheet);
 			setLoadedUsers(json);
 		};
 		reader.readAsBinaryString(file);
+	}
+
+	const createMassiveBookingsMutation = useMutation({
+		mutationKey: ['createMassiveBookings', eventId],
+		mutationFn: async (users: CreateUser) => await createMassiveBookings(users, eventId),
+	})
+
+	const handleSave = async () => {
+		const validation = CreateUserSchema.safeParse(loadedUsers);
+		console.log(validation)
+		if (validation.success) {
+			const users = loadedUsers.map(user => ({...user, phone: user.phone.toString()}))
+			await createMassiveBookingsMutation.mutateAsync(users);
+		}
 	}
 
 	useEffect(() => {
@@ -53,7 +76,7 @@ const LoadUsersModal = () => {
 					<DialogClose asChild>
 						<Button variant='outline'>Cancelar</Button>
 					</DialogClose>
-					<Button>Guardar</Button>
+					<Button onClick={handleSave}>Guardar</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

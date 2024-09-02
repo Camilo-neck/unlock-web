@@ -3,6 +3,9 @@ import { redirect } from 'next/navigation';
 import Content from '@/components/ui/dashboard/content';
 import SidebarsWrapper from '@/components/ui/dashboard/sidebarsWrapper';
 import { createClient } from '@/lib/supabase/server';
+import getEvent from '@/services/getEvent.service';
+import getAdminEvents from '@/services/getAdminEvents.service';
+import getBookingsByEvent from '@/services/getBookingsByEvent.service';
 
 const DashboardPage = async ({
   searchParams,
@@ -16,14 +19,27 @@ const DashboardPage = async ({
 	if (error || !data?.user) {
 		redirect('/login');
 	}
+	const adminEvents = await getAdminEvents();
+
+	if (event) {
+		const eventData = await getEvent(event as string);
+		const eventBookings = await getBookingsByEvent(event as string);
+		return (
+			<div className='flex overflow-x-hidden'>
+				<SidebarsWrapper events={adminEvents}>
+					<div className='flex-1 p-20 overflow-x-auto'>
+						<Content eventData={eventData} bookings={eventBookings} />
+					</div>
+				</SidebarsWrapper>
+			</div>
+		)
+	}
 
 	return (
 		<div className='flex overflow-x-hidden'>
-			<SidebarsWrapper>
+			<SidebarsWrapper events={adminEvents}>
 				<div className='flex-1 p-20 overflow-x-auto'>
-					{
-						event ? <Content /> : <div className='text-4xl font-bold'>Welcome to Unlock!</div>
-					}
+					<div className='text-4xl font-bold'>Welcome to Unlock!</div>
 				</div>
 			</SidebarsWrapper>
 		</div>

@@ -21,98 +21,23 @@ import {
 import useDashboardSidebars from "@/stores/useDashboardSidebars";
 import useUser from "@/hooks/useUser";
 import { useSearchParams } from "next/navigation";
-import { useQuery } from "react-query";
-import getEvent from "@/services/getEvent";
 import useSession from "@/hooks/useSession";
 import { formatDateString } from "@/lib/utils";
 import LoadUsersModal from "./modals/LoadUsersModal";
+import { Event } from "@/schemas/event.schema";
+import { Booking } from "@/schemas/booking.schema";
 
-const customers = [
-    {
-        name: "John Cooper",
-        username: "Microsoft",
-        phone: "(123) 456-7890",
-        email: "john@microsoft.com",
-        status: "Checked-in",
-        device: "RJ486",
-        staying: true,
-    },
-    {
-        name: "Floyd Miles",
-        username: "Yahoo",
-        phone: "(234) 567-8901",
-        email: "floyd@yahoo.com",
-        status: "Checked-in",
-        device: "BM236",
-        staying: true,
-    },
-    {
-        name: "Ronald Richards",
-        username: "Adobe",
-        phone: "(345) 678-9012",
-        email: "ronald@adobe.com",
-        status: "No Show",
-        device: "LA874",
-        staying: false,
-    },
-    {
-        name: "Marvin McKinney",
-        username: "Tesla",
-        phone: "(456) 789-0123",
-        email: "marvin@tesla.com",
-        status: "No Show",
-        device: "BM236",
-        staying: false,
-    },
-    {
-        name: "Jerome Bell",
-        username: "Google",
-        phone: "(567) 890-1234",
-        email: "jerome@google.com",
-        status: "Checked-in",
-        device: "RJ486",
-        staying: true,
-    },
-    {
-        name: "Kathryn Murphy",
-        username: "Microsoft",
-        phone: "(678) 901-2345",
-        email: "kathryn@microsoft.com",
-        status: "No Show",
-        device: "LA874",
-        staying: false,
-    },
-    {
-        name: "Jacob Jones",
-        username: "Yahoo",
-        phone: "(789) 012-3456",
-        email: "jacob@yahoo.com",
-        status: "Checked-in",
-        device: "RJ486",
-        staying: true,
-    },
-    {
-        name: "Kristin Watson",
-        username: "Facebook",
-        phone: "(890) 123-4567",
-        email: "kristin@facebook.com",
-        status: "No Show",
-        device: "BM254",
-        staying: false,
-    },
-];
+interface ContentProps {
+    eventData: Event;
+    bookings: Booking[];
+}
 
-const Content = () => {
+const Content = ({
+    eventData,
+    bookings,
+}: ContentProps) => {
     const { toggleOpen } = useDashboardSidebars();
-    const { data: { session } } = useSession();
     const { data: { user } } = useUser();
-    const searchParams = useSearchParams();
-
-    const { data: eventData } = useQuery({
-        queryKey: ["eventData", searchParams.get("event")],
-        queryFn: () => getEvent(session?.access_token ?? '' , searchParams.get("event") ?? ''),
-        enabled: !!session?.access_token && !!searchParams.get("event"),
-    })
 
     return (
         <div className="w-full mx-auto space-y-6 overflow-x-hidden">
@@ -165,7 +90,7 @@ const Content = () => {
                             placeholder="Buscar"
                             type="search"
                         />
-                        <LoadUsersModal />
+                        <LoadUsersModal eventId={eventData.id} />
                         <Button onClick={()=>toggleOpen()}>
                             <div className="flex items-center gap-1">
                                 <Logs size={16} /> Logs
@@ -178,26 +103,25 @@ const Content = () => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Nombre del Asistente</TableHead>
-                                <TableHead>Nombre de usuario</TableHead>
-                                <TableHead>Número telefónico</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Número telefónico</TableHead>
                                 <TableHead>Dispositivo</TableHead>
                                 <TableHead>Alojamiento</TableHead>
+                                <TableHead>Fecha Ingreso</TableHead>
                                 <TableHead>Estado</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {customers.map((customer) => (
-                                <TableRow key={customer.email}>
+                            {bookings?.map((booking, index) => (
+                                <TableRow key={booking.id}>
                                     <TableCell className="font-medium">
-                                        {customer.name}
+                                        {booking.user.name || '-'}
                                     </TableCell>
-                                    <TableCell>{customer.username}</TableCell>
-                                    <TableCell>{customer.phone}</TableCell>
-                                    <TableCell>{customer.email}</TableCell>
-                                    <TableCell>{customer.device}</TableCell>
+                                    <TableCell>{booking.user.email}</TableCell>
+                                    <TableCell>{booking.user.phone || '-'}</TableCell>
+                                    <TableCell>{booking.device.name}</TableCell>
                                     <TableCell>
-                                        {customer.staying ? (
+                                        {index % 3 === 0 ? (
                                             <Check
                                                 className="text-secondary-foreground"
                                                 size={16}
@@ -209,15 +133,16 @@ const Content = () => {
                                             />
                                         )}
                                     </TableCell>
+                                    <TableCell>{formatDateString(booking.created_at)}</TableCell>
                                     <TableCell>
                                         <span
                                             className={`px-2 py-1 rounded-sm text-xs ${
-                                                customer.status === "Checked-in"
+                                                booking.checked_in
                                                     ? "bg-secondary text-secondary-foreground border border-secondary-foreground"
                                                     : "bg-error text-error-foreground border border-error-foreground"
                                             }`}
                                         >
-                                            {customer.status}
+                                            {booking.checked_in ? "Ingresado" : "Fuera"}
                                         </span>
                                     </TableCell>
                                 </TableRow>

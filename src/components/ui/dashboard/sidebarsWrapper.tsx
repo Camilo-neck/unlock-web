@@ -3,16 +3,19 @@
 import useDashboardSidebars from '@/stores/useDashboardSidebars';
 import Sidebar from './sidebar';
 import LogsSidebar from './logsSidebar';
+import { Event } from '@/schemas/event.schema';
 
 const SidebarsWrapper = ({
-	children
+	children,
+	events
 }: {
 	children: React.ReactNode;
+	events?: Event[];
 }) => {
 	const { open } = useDashboardSidebars();
 	return (
 		<>
-			<Sidebar size={open !== 'left' ? 'sm' : 'default'} />
+			<Sidebar events={events} size={open !== 'left' ? 'sm' : 'default'} />
 			{children}
 			<LogsSidebar size={open === 'left' ? 'sm' : 'default'} />
 		</>
