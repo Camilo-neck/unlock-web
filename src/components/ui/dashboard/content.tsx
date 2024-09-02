@@ -67,7 +67,7 @@ const Content = ({
                 <div className="flex items-center space-x-4 bg-green-50 rounded-lg p-4">
                     <UserCircle2 className="h-8 w-8 text-green-500" />
                     <div>
-                        <div className="text-2xl font-bold">5,423</div>
+                        <div className="text-2xl font-bold">{bookings.length}</div>
                         <div className="text-sm text-gray-500">Asistentes</div>
                     </div>
                 </div>
@@ -75,7 +75,7 @@ const Content = ({
                 <div className="flex items-center space-x-4 bg-blue-50 rounded-lg p-4">
                     <MonitorSmartphone className="h-8 w-8 text-blue-500" />
                     <div>
-                        <div className="text-2xl font-bold">189</div>
+                        <div className="text-2xl font-bold">{ bookings.reduce((prev, curr) => prev + (curr.checked_in ? 1 : 0), 0) }</div>
                         <div className="text-sm text-gray-500">Ingresados</div>
                     </div>
                 </div>

@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import { useMutation } from 'react-query';
 import createMassiveBookings from '@/services/createMassiveBookings.service';
 import { CreateUser, CreateUserSchema } from '@/schemas/user.schema';
+import DocumentParserFactory from '@/lib/documentParser/documentParserFactory';
 
 interface LoadUsersModalProps {
 	eventId: string;
@@ -23,16 +24,8 @@ const LoadUsersModal = ({
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		const reader = new FileReader();
-		reader.onload = (e) => {
-			const data = e.target?.result;
-			const workbook = XLSX.read(data, { type: 'binary' });
-			const sheetName = workbook.SheetNames[0];
-			const sheet = workbook.Sheets[sheetName];
-			const json: CreateUser = XLSX.utils.sheet_to_json(sheet);
-			setLoadedUsers(json);
-		};
-		reader.readAsBinaryString(file);
+		const parser = DocumentParserFactory.createParser(file);
+		parser.parse().then((data) => setLoadedUsers(data));
 	}
 
 	const createMassiveBookingsMutation = useMutation({
@@ -42,20 +35,15 @@ const LoadUsersModal = ({
 
 	const handleSave = async () => {
 		const validation = CreateUserSchema.safeParse(loadedUsers);
-		console.log(validation)
 		if (validation.success) {
 			const users = loadedUsers.map(user => ({...user, phone: user.phone.toString()}))
 			await createMassiveBookingsMutation.mutateAsync(users);
 		}
 	}
 
-	useEffect(() => {
-		console.log(loadedUsers);
-	}, [loadedUsers]);
-
 	return (
 		<Dialog>
-			<DialogTrigger>
+			<DialogTrigger asChild>
 				<Button className='flex items-center gap-2' variant='outline'>
 					<Table size={16} />
 					Cargar Usuarios
@@ -70,7 +58,7 @@ const LoadUsersModal = ({
 				</DialogHeader>
 				<div>
 					<Label htmlFor='file'>Archivo</Label>
-					<Input onChange={handleFile} id='file' type='file' accept='.xlsx, .csv' />
+					<Input onChange={handleFile} id='file' type='file' accept='.xlsx, .csv, .json' />
 				</div>
 				<DialogFooter>
 					<DialogClose asChild>
