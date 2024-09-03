@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../../button';
+import { Button } from '../../ui/button';
 import { Table } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger, DialogClose, DialogFooter, DialogHeader } from '@/components/ui/dialog';
-import { Input } from '../../input';
-import { Label } from '../../label';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
 
 import * as XLSX from 'xlsx';
 import { useMutation } from 'react-query';

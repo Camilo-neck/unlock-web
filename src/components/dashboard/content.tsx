@@ -1,6 +1,6 @@
 'use client'
 
-import { Input } from "../input";
+import { Input } from "../ui/input";
 import {
     Check,
     Logs,
@@ -9,7 +9,7 @@ import {
     Users,
     X,
 } from "lucide-react";
-import { Button } from "../button";
+import { Button } from "../ui/button";
 import {
     Table,
     TableBody,
@@ -17,7 +17,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "../table";
+} from "../ui/table";
 import useDashboardSidebars from "@/stores/useDashboardSidebars";
 import useUser from "@/hooks/useUser";
 import { useSearchParams } from "next/navigation";

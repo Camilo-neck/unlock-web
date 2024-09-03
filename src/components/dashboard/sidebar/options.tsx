@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Button } from '../../button';
+import { Button } from '../../ui/button';
 import { Event } from '@/schemas/event.schema';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';

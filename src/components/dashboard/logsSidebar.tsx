@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { cva, VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 import React from 'react';
-import { Button } from '../button';
+import { Button } from '../ui/button';
 import Logs from './logsSidebar/logs';
 import useDashboardSidebars from '@/stores/useDashboardSidebars';
 

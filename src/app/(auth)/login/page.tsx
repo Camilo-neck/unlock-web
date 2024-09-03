@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FormMessage, Message } from "@/components/ui/forms/formMessage";
-import SubmitButton from "@/components/ui/forms/submitButton";
+import { FormMessage, Message } from "@/components/forms/formMessage";
+import SubmitButton from "@/components/forms/submitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/server";

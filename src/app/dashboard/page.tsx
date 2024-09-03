@@ -1,11 +1,12 @@
 import React, { Suspense } from 'react';
 import { redirect } from 'next/navigation';
-import Content from '@/components/ui/dashboard/content';
-import SidebarsWrapper from '@/components/ui/dashboard/sidebarsWrapper';
+import Content from '@/components/dashboard/content';
+import SidebarsWrapper from '@/components/dashboard/sidebarsWrapper';
 import { createClient } from '@/lib/supabase/server';
 import getEvent from '@/services/getEvent.service';
 import getAdminEvents from '@/services/getAdminEvents.service';
 import getBookingsByEvent from '@/services/getBookingsByEvent.service';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const DashboardPage = async ({
   searchParams,
@@ -28,7 +29,9 @@ const DashboardPage = async ({
 			<div className='flex overflow-x-hidden'>
 				<SidebarsWrapper events={adminEvents}>
 					<div className='flex-1 p-20 overflow-x-auto'>
-						<Content eventData={eventData} bookings={eventBookings} />
+						<Suspense fallback={<Skeleton className='h-12 w-12 rounded-full' />}>
+							<Content eventData={eventData} bookings={eventBookings} />
+						</Suspense>
 					</div>
 				</SidebarsWrapper>
 			</div>
