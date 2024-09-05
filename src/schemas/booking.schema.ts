@@ -9,6 +9,7 @@ export const BookingSchema = z.object({
 	user: UserSchema,
 	device: DeviceSchema,
 	checked_in: z.boolean(),
+	booked_at: z.string().optional(),
 	created_at: z.string(),
 });
 

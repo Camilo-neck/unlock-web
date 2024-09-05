@@ -133,7 +133,7 @@ const Content = ({
                                             />
                                         )}
                                     </TableCell>
-                                    <TableCell>{formatDateString(booking.created_at)}</TableCell>
+                                    <TableCell>{ booking.booked_at ? formatDateString(booking.booked_at) : "-"}</TableCell>
                                     <TableCell>
                                         <span
                                             className={`px-2 py-1 rounded-sm text-xs ${
