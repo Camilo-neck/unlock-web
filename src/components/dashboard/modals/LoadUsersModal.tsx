@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../../ui/button';
-import { Table } from 'lucide-react';
+import { FileUp, } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger, DialogClose, DialogFooter, DialogHeader } from '@/components/ui/dialog';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 
-import * as XLSX from 'xlsx';
 import { useMutation } from 'react-query';
 import createMassiveBookings from '@/services/createMassiveBookings.service';
 import { CreateUser, CreateUserSchema } from '@/schemas/user.schema';
@@ -45,7 +44,7 @@ const LoadUsersModal = ({
 		<Dialog>
 			<DialogTrigger asChild>
 				<Button className='flex items-center gap-2' variant='outline'>
-					<Table size={16} />
+					<FileUp size={16} />
 					Cargar Usuarios
 				</Button>
 			</DialogTrigger>
