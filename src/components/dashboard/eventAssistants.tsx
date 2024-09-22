@@ -10,6 +10,7 @@ import { Booking } from '@/schemas/booking.schema';
 import useDashboardSidebars from '@/stores/useDashboardSidebars';
 import { useState } from 'react';
 import useBookings from '@/stores/useBookings';
+import CreateDevicesModal from './modals/CreateDevicesModal';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -63,6 +64,7 @@ const EventAssistants = ({
 						value={searchFilter}
 						onChange={(e) => setSearchFilter(e.target.value)}
 					/>
+					<CreateDevicesModal eventId={eventId} />
 					<LoadUsersModal eventId={eventId} />
 					<Button onClick={toggleOpen}>
 						<div className="flex items-center gap-1">
