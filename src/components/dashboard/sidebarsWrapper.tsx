@@ -15,7 +15,7 @@ const SidebarsWrapper = ({
 	const { open } = useDashboardSidebars();
 	return (
 		<>
-			<Sidebar events={events} size={open !== 'left' ? 'sm' : 'default'} />
+			<Sidebar initialEvents={events} size={open !== 'left' ? 'sm' : 'default'} />
 			{children}
 			<LogsSidebar size={open === 'left' ? 'sm' : 'default'} />
 		</>

@@ -3,10 +3,7 @@ import { Button } from '../../ui/button';
 import { Event } from '@/schemas/event.schema';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
-
-interface OptionsProps {
-	events?: Event[];
-}
+import useAdminEvents from '@/stores/useAdminEvents';
 
 const icons = [
   "👥",
@@ -15,12 +12,12 @@ const icons = [
   "🎭",
 ]
 
-const Options = ({
-	events
-}: OptionsProps) => {
+const Options = () => {
 	const pathname = usePathname()
 	const router = useRouter()
 	const searchParams = useSearchParams();
+
+	const { events } = useAdminEvents();
 
 	const createQueryString = useCallback(
 		(name: string, value: string) => {

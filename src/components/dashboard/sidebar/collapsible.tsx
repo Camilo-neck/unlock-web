@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Plus } from "lucide-react"
 
 import {
   Collapsible as RadixCollapsible,
@@ -12,6 +12,8 @@ import { Event } from "@/schemas/event.schema"
 import { Button } from "../../ui/button"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { cn } from "@/lib/utils"
+import CreateEventModal from "./createEventModal"
+import useAdminEvents from "@/stores/useAdminEvents"
 
 
 const icons = [
@@ -21,11 +23,9 @@ const icons = [
   "🎭",
 ]
 
-interface CollapsibleProps {
-  events?: Event[];
-}
 
-export default function Collapsible({ events }: CollapsibleProps) {
+export default function Collapsible() {
+  const { events } = useAdminEvents();
   const [isOpen, setIsOpen] = useState(true)
   const pathname = usePathname()
   const router = useRouter()
@@ -72,6 +72,8 @@ export default function Collapsible({ events }: CollapsibleProps) {
                 </div>
               </Button>
             ))}
+            <hr />
+            <CreateEventModal />
           </div>
         </CollapsibleContent>
       </RadixCollapsible>

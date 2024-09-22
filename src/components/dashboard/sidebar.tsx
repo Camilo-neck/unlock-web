@@ -9,10 +9,8 @@ import useUser from '@/hooks/useUser';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
-import  { useQuery } from 'react-query';
-import useSession from '@/hooks/useSession';
-import getAdminEvents from '@/services/getAdminEvents.service';
 import { Event } from '@/schemas/event.schema';
+import useAdminEvents from '@/stores/useAdminEvents';
 
 const sidebarVariants = cva(
 	'bg-white border h-screen top-0 left-0 z-50 flex flex-col gap-10 p-8',
@@ -35,19 +33,20 @@ const sidebarVariants = cva(
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof sidebarVariants> {
 	asChild?: boolean;
-	events?: Event[];
+	initialEvents?: Event[];
 }
 
 const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
-	({className, variant, size, events, asChild = false, ...props}, ref) => {
+	({className, variant, size, initialEvents, asChild = false, ...props}, ref) => {
 	const supabase = createClient();
 	const router = useRouter();
 	const { data: userData } = useUser();
+	const { setEvents } = useAdminEvents();
 
 	useEffect(() => {
-		console.log(events);
-	}, [events]);
-	
+		setEvents(initialEvents ?? []);
+	}, [initialEvents]);
+
 	const signOut = async () => {
 		await supabase.auth.signOut();
 		router.push('/');
@@ -70,12 +69,12 @@ const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 			<div className='mt-5 flex-1'>
 				{
 					size === 'sm' && (
-						<Options events={events} />
+						<Options />
 					)
 				}
 				{
 					size === 'default' && (
-						<Collapsible events={events} />
+						<Collapsible />
 					)
 				}
 			</div>

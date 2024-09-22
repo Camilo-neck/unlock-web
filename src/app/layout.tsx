@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { cn } from "@/lib/utils"
 import Providers from "./providers";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({
             fontSans.variable
           )}>
             {children}
+            <Toaster />
         </body>
       </Providers>
     </html>

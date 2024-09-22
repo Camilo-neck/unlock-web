@@ -12,6 +12,28 @@ const EventSchema = z.object({
 	created_at: z.string(),
 });
 
+export const CreateEventSchema = z.object({
+	name: z.string({
+		required_error: 'El nombre es requerido',
+	}),
+	description: z.string({
+		required_error: 'La descripción es requerida',
+	}),
+	location: z.string({
+		required_error: 'La ubicación es requerida',
+	}),
+	capacity: z.number({
+		required_error: 'La capacidad es requerida',
+		invalid_type_error: 'La capacidad debe ser un número',
+	}),
+	start_time: z.string({
+		required_error: 'La hora de inicio es requerida',
+	}),
+	end_time: z.string({
+		message: 'La hora de finalización es requerida',
+	}),
+});
+
 export type Event = z.infer<typeof EventSchema>;
 
 export default EventSchema;

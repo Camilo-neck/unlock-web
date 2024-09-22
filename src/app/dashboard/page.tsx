@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation';
 import Content from '@/components/dashboard/content';
 import SidebarsWrapper from '@/components/dashboard/sidebarsWrapper';
 import { createClient } from '@/lib/supabase/server';
-import getEvent from '@/services/getEvent.service';
-import getAdminEvents from '@/services/getAdminEvents.service';
-import getBookingsByEvent from '@/services/getBookingsByEvent.service';
+import getEvent from '@/services/queries/getEvent.service';
+import getAdminEvents from '@/services/queries/getAdminEvents.service';
+import getBookingsByEvent from '@/services/queries/getBookingsByEvent.service';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const DashboardPage = async ({
@@ -23,14 +23,12 @@ const DashboardPage = async ({
 	const adminEvents = await getAdminEvents();
 
 	if (event) {
-		const eventData = await getEvent(event as string);
-		const eventBookings = await getBookingsByEvent(event as string);
 		return (
 			<div className='flex overflow-x-hidden'>
 				<SidebarsWrapper events={adminEvents}>
 					<div className='flex-1 p-20 overflow-x-auto'>
 						<Suspense fallback={<Skeleton className='h-12 w-12 rounded-full' />}>
-							<Content eventData={eventData} bookings={eventBookings} />
+							<Content event={event as string} />
 						</Suspense>
 					</div>
 				</SidebarsWrapper>

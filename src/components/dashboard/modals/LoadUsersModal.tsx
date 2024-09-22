@@ -6,18 +6,26 @@ import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
 
 import { useMutation } from 'react-query';
-import createMassiveBookings from '@/services/createMassiveBookings.service';
+import createMassiveBookings from '@/services/mutations/createMassiveBookings.service';
 import { CreateUser, CreateUserSchema } from '@/schemas/user.schema';
 import DocumentParserFactory from '@/lib/documentParser/documentParserFactory';
+import { useToast } from '@/hooks/use-toast';
+import { Booking } from '@/schemas/booking.schema';
+import useBookings from '@/stores/useBookings';
+import { Spinner } from '@/components/ui/spinner';
 
 interface LoadUsersModalProps {
 	eventId: string;
+	updateBookings?: (newBookings: Booking[]) => void;
 }
 
 const LoadUsersModal = ({
 	eventId,
+	updateBookings,
 }: LoadUsersModalProps) => {
 	const [ loadedUsers, setLoadedUsers ] = useState<CreateUser>([]);
+	const { appendBookings } = useBookings();
+	const { toast } = useToast();
 
 	const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -36,7 +44,20 @@ const LoadUsersModal = ({
 		const validation = CreateUserSchema.safeParse(loadedUsers);
 		if (validation.success) {
 			const users = loadedUsers.map(user => ({...user, phone: user.phone.toString()}))
-			await createMassiveBookingsMutation.mutateAsync(users);
+			try {
+				const newBookings = await createMassiveBookingsMutation.mutateAsync(users);
+				appendBookings(newBookings);
+				toast({
+					title: 'Usuarios cargados',
+					description: 'Los usuarios se han cargado correctamente',
+				})
+			} catch (error: any) {
+				toast({
+					title: 'Error al cargar usuarios',
+					description: 'Hubo un error al cargar los usuarios: ' + error?.message,
+					variant: 'destructive',
+				})
+			}
 		}
 	}
 
@@ -63,7 +84,12 @@ const LoadUsersModal = ({
 					<DialogClose asChild>
 						<Button variant='outline'>Cancelar</Button>
 					</DialogClose>
-					<Button onClick={handleSave}>Guardar</Button>
+					<Button onClick={handleSave}>
+						Guardar
+						{
+							createMassiveBookingsMutation.isLoading && <Spinner className='ml-2' />
+						}
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
