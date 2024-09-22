@@ -13,18 +13,17 @@ import { useToast } from '@/hooks/use-toast';
 import { Booking } from '@/schemas/booking.schema';
 import useBookings from '@/stores/useBookings';
 import { Spinner } from '@/components/ui/spinner';
+import getBookingsByEvent from '@/services/queries/getBookingsByEvent.service';
 
 interface LoadUsersModalProps {
 	eventId: string;
-	updateBookings?: (newBookings: Booking[]) => void;
 }
 
 const LoadUsersModal = ({
 	eventId,
-	updateBookings,
 }: LoadUsersModalProps) => {
 	const [ loadedUsers, setLoadedUsers ] = useState<CreateUser>([]);
-	const { appendBookings } = useBookings();
+	const { setBookings } = useBookings();
 	const { toast } = useToast();
 
 	const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,8 +44,9 @@ const LoadUsersModal = ({
 		if (validation.success) {
 			const users = loadedUsers.map(user => ({...user, phone: user.phone.toString()}))
 			try {
-				const newBookings = await createMassiveBookingsMutation.mutateAsync(users);
-				appendBookings(newBookings);
+				await createMassiveBookingsMutation.mutateAsync(users);
+				const bookings = await getBookingsByEvent(eventId);
+				setBookings(bookings)
 				toast({
 					title: 'Usuarios cargados',
 					description: 'Los usuarios se han cargado correctamente',
