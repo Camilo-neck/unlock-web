@@ -4,6 +4,7 @@ import EventAssistants from "./eventAssistants";
 import getEvent from "@/services/queries/getEvent.service";
 import getBookingsByEvent from "@/services/queries/getBookingsByEvent.service";
 import BookingsProvider from "@/hooks/bookingsProvider";
+import Greetings from "./greetings";
 
 interface ContentProps {
     event: string
@@ -17,6 +18,7 @@ const Content = async ({
     return (
         <div className="w-full mx-auto space-y-6 overflow-x-hidden">
             <BookingsProvider initialBookings={bookings}>
+                <Greetings />
                 <EventInformation
                     description={eventData.description}
                     name={eventData.name}
