@@ -19,7 +19,7 @@ const DeviceCard = ({
 					{device.name}
 				</CardTitle>
 				<CardDescription className='min-w-max'>
-					{device.status} | {formatDateString(device.created_at)}
+					{device.status} | {device.id} <br /> {formatDateString(device.created_at)}
 				</CardDescription>
 			</CardHeader>
 		</Card>
