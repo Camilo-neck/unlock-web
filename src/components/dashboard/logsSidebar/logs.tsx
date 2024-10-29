@@ -59,7 +59,7 @@ const Logs = ({ event } : { event: string }) => {
 		return (() => {
 			supabase.removeChannel(channel);
 		});
-	}, [supabase]);
+	}, [supabase, event]);
 
 	const { data, refetch } = useQuery({
 		queryKey: ['getEventLogs', event],
