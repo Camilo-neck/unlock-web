@@ -117,7 +117,7 @@ const CreateEventModal = () => {
 							render={({ field }) => (
 								<div className='flex flex-col gap-2'>
 									<Label htmlFor='start_time'>Hora de inicio</Label>
-									<Input type='datetime-local' min={new Date().toISOString().substring(0, 16)} {...field} id='start_time' />
+									<Input type='datetime-local' {...field} id='start_time' />
 									<FormMessage />
 								</div>
 							)}
