@@ -27,7 +27,6 @@ const CreateDevicesModal = ({
 	const { data: devices, refetch } = useQuery({
 		queryKey: ['devices', eventId],
 		queryFn: () => getEventDevices(eventId),
-		onSuccess: (data) => console.log(data)
 	})
 
 	const createDeviceMutation = useMutation({

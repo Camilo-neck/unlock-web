@@ -29,10 +29,11 @@ const logsSidebarVariants = cva(
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof logsSidebarVariants> {
 	asChild?: boolean;
+	event?: string;
 }
 
 const LogsSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
-	({className, variant, size, asChild = false, ...props}, ref) => {
+	({className, event, variant, size, asChild = false, ...props}, ref) => {
 	const { setOpen } = useDashboardSidebars();
 	return (
 		<div 
@@ -48,7 +49,7 @@ const LogsSidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
 			</div>
 			<hr />
 			<div className='mt-5'>
-				<Logs />
+				<Logs event={event!} />
 			</div>
 		</div>
 	);

@@ -25,7 +25,7 @@ const DashboardPage = async ({
 	if (event) {
 		return (
 			<div className='flex overflow-x-hidden'>
-				<SidebarsWrapper events={adminEvents}>
+				<SidebarsWrapper event={event as string} events={adminEvents}>
 					<div className='flex-1 p-20 overflow-x-auto'>
 						<Suspense fallback={<Skeleton className='h-12 w-12 rounded-full' />}>
 							<Content event={event as string} />
@@ -38,7 +38,7 @@ const DashboardPage = async ({
 
 	return (
 		<div className='flex overflow-x-hidden'>
-			<SidebarsWrapper events={adminEvents}>
+			<SidebarsWrapper event={event!} events={adminEvents}>
 				<div className='flex-1 p-20 overflow-x-auto'>
 					<div className='text-4xl font-bold'>Welcome to Unlock!</div>
 				</div>

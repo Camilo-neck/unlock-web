@@ -6,9 +6,11 @@ import LogsSidebar from './logsSidebar';
 import { Event } from '@/schemas/event.schema';
 
 const SidebarsWrapper = ({
+	event,
 	children,
 	events
 }: {
+	event: string;
 	children: React.ReactNode;
 	events?: Event[];
 }) => {
@@ -17,7 +19,7 @@ const SidebarsWrapper = ({
 		<>
 			<Sidebar initialEvents={events} size={open !== 'left' ? 'sm' : 'default'} />
 			{children}
-			<LogsSidebar size={open === 'left' ? 'sm' : 'default'} />
+			<LogsSidebar event={event} size={open === 'left' ? 'sm' : 'default'} />
 		</>
 	);
 };
